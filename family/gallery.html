@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Gallery - Happy Valentine's Day</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+<script src="music-persistence.js"></script>
+
+<nav>
+  <a href="index.html">💖 Home</a>
+  <a href="messages.html">💌 Messages</a>
+  <a href="gallery.html">📸 Gallery</a>
+  <a href="memories.html">🕰️ Memories</a>
+  <a href="love.html">❤️ Love</a>
+</nav>
+
+<section id="gallery">
+  <h2>📸 Family Memories</h2>
+  <div class="gallery">
+    <img src="pic1.jpg" alt="Family Photo 1" class="gallery-img" onclick="openModal(this.src)">
+    <img src="pic2.jpg" alt="Family Photo 2" class="gallery-img" onclick="openModal(this.src)">
+    <img src="pic10.jpg" alt="Family Photo 3" class="gallery-img" onclick="openModal(this.src)">
+    <img src="pic9.jpg" alt="Family Photo 4" class="gallery-img" onclick="openModal(this.src)">
+    <img src="pic11.jpg" alt="Family Photo 9" class="gallery-img" onclick="openModal(this.src)">
+    <img src="pic12.jpg" alt="Family Photo 10" class="gallery-img" onclick="openModal(this.src)">
+    <img src="pic6.jpg" alt="Family Photo 5" class="gallery-img" onclick="openModal(this.src)">
+    <img src="pic8.jpg" alt="Family Photo 6" class="gallery-img" onclick="openModal(this.src)">
+    <img src="pic7.jpg" alt="Family Photo 7" class="gallery-img" onclick="openModal(this.src)">
+    <img src="pic4.jpg" alt="Family Photo 8" class="gallery-img" onclick="openModal(this.src)">
+    <img src="pic3.jpg" alt="Family Photo 9" class="gallery-img" onclick="openModal(this.src)">
+    <img src="pic5.jpg" alt="Family Photo 10" class="gallery-img" onclick="openModal(this.src)">
+  </div>
+</section>
+
+<!-- Image Modal -->
+<div id="imageModal" class="modal">
+  <span class="close" onclick="closeModal()">&times;</span>
+  <img class="modal-content" id="modalImage">
+  <div id="caption"></div>
+  <a class="prev" onclick="changeImage(-1)">&#10094;</a>
+  <a class="next" onclick="changeImage(1)">&#10095;</a>
+</div>
+
+<button class="music" id="musicBtn" aria-label="Toggle music">🎵</button>
+<audio id="bgMusic" loop preload="auto" autoplay>
+  <source src="https://archive.org/download/nothings-gonna-change-my-love-for-you-george-benson-christian-ama-saxophone-cover_202601/Nothing%27s%20Gonna%20Change%20My%20Love%20For%20You%20George%20Benson%20%28Christian%20Ama%20Saxophone%20Cover%29.mp3" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>
+
+<script>
+// MUSIC FUNCTIONALITY
+let playing = false;
+const musicBtn = document.getElementById("musicBtn");
+const bgMusic = document.getElementById("bgMusic");
+
+// Attempt to autoplay
+window.addEventListener('load', function() {
+  bgMusic.volume = 0.5; // Set volume to 50%
+  bgMusic.play().catch(error => {
+    // Autoplay might be blocked, that's OK
+    console.log("Autoplay blocked - user interaction required");
+    playing = false;
+    musicBtn.style.opacity = "0.7";
+  });
+  playing = true;
+  musicBtn.style.opacity = "1";
+});
+
+function toggleMusic() {
+  if (playing) {
+    bgMusic.pause();
+    musicBtn.style.opacity = "0.7";
+    playing = false;
+  } else {
+    bgMusic.play().catch(error => {
+      console.log("Audio playback failed:", error);
+      alert("Music playback not available. Your browser may have blocked autoplay.");
+    });
+    musicBtn.style.opacity = "1";
+    playing = true;
+  }
+}
+
+// Click event
+musicBtn.addEventListener("click", toggleMusic, false);
+
+// Touch event for better mobile support
+musicBtn.addEventListener("touchstart", (e) => {
+  e.preventDefault();
+  toggleMusic();
+}, false);
+
+// Visual feedback on button press
+musicBtn.addEventListener("mousedown", function() {
+  this.style.transform = "scale(0.9)";
+});
+
+musicBtn.addEventListener("mouseup", function() {
+  this.style.transform = "scale(1)";
+});
+
+musicBtn.addEventListener("touchstart", function() {
+  this.style.transform = "scale(0.9)";
+});
+
+musicBtn.addEventListener("touchend", function() {
+  this.style.transform = "scale(1)";
+});
+
+// IMAGE GALLERY MODAL FUNCTIONALITY
+const images = [
+  'pic1.jpg', 'pic2.jpg', 'pic10.jpg', 'pic9.jpg', 'pic11.jpg', 'pic12.jpg',
+  'pic6.jpg', 'pic8.jpg', 'pic7.jpg', 'pic4.jpg', 'pic3.jpg', 'pic5.jpg'
+];
+let currentImageIndex = 0;
+
+function openModal(src) {
+  const modal = document.getElementById("imageModal");
+  const modalImg = document.getElementById("modalImage");
+  const captionText = document.getElementById("caption");
+  
+  // Find image index
+  currentImageIndex = images.indexOf(src.split('/').pop());
+  
+  modalImg.src = src;
+  captionText.innerHTML = "Photo " + (currentImageIndex + 1) + " of " + images.length;
+  modal.classList.add("show");
+  
+  // Prevent body scroll when modal is open
+  document.body.style.overflow = "hidden";
+}
+
+function closeModal() {
+  const modal = document.getElementById("imageModal");
+  modal.classList.remove("show");
+  document.body.style.overflow = "auto";
+}
+
+function changeImage(n) {
+  currentImageIndex += n;
+  if (currentImageIndex >= images.length) {
+    currentImageIndex = 0;
+  }
+  if (currentImageIndex < 0) {
+    currentImageIndex = images.length - 1;
+  }
+  
+  const modalImg = document.getElementById("modalImage");
+  const captionText = document.getElementById("caption");
+  
+  modalImg.src = images[currentImageIndex];
+  captionText.innerHTML = "Photo " + (currentImageIndex + 1) + " of " + images.length;
+}
+
+// Close modal when clicking outside the image
+const modal = document.getElementById("imageModal");
+window.onclick = function(event) {
+  if (event.target == modal) {
+    closeModal();
+  }
+}
+
+// Keyboard navigation
+document.addEventListener('keydown', function(event) {
+  const modal = document.getElementById("imageModal");
+  if (modal.classList.contains("show")) {
+    if (event.key === "ArrowLeft") changeImage(-1);
+    if (event.key === "ArrowRight") changeImage(1);
+    if (event.key === "Escape") closeModal();
+  }
+});
+
+// FLOATING HEARTS
+setInterval(()=>{
+  const h=document.createElement("div");
+  h.className="heart";
+  h.innerHTML="❤️";
+  h.style.left=Math.random()*100+"vw";
+  h.style.fontSize=Math.random()*20+10+"px";
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),8000);
+},500);
+</script>
+
+</body>
+</html>

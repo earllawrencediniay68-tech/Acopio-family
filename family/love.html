@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Love - Happy Valentine's Day</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+<script src="music-persistence.js"></script>
+
+<nav>
+  <a href="index.html">💖 Home</a>
+  <a href="messages.html">💌 Messages</a>
+  <a href="gallery.html">📸 Gallery</a>
+  <a href="memories.html">🕰️ Memories</a>
+  <a href="love.html">❤️ Love</a>
+</nav>
+
+<section id="final">
+  <h2>❤️ Forever Family Love</h2>
+  <p>"Family is where life begins and love never ends."</p>
+  <div class="final-heart">❤️</div>
+  <h3>Click the heart for a special message</h3>
+  <button id="heartBtn">❤️</button>
+  <p id="surpriseText"></p>
+</section>
+
+<button class="music" id="musicBtn" aria-label="Toggle music">🎵</button>
+<audio id="bgMusic" loop preload="auto" autoplay>
+  <source src="https://archive.org/download/nothings-gonna-change-my-love-for-you-george-benson-christian-ama-saxophone-cover_202601/Nothing%27s%20Gonna%20Change%20My%20Love%20For%20You%20George%20Benson%20%28Christian%20Ama%20Saxophone%20Cover%29.mp3" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>
+
+<script>
+const messages=[
+  "You are deeply loved 💖",
+  "Our family is our greatest blessing 🙏",
+  "Love lives in every moment we share 💕",
+  "Together, we are stronger 💪",
+  "Forever and always, I love you 💝"
+];
+
+document.getElementById("heartBtn").onclick=()=>{
+  document.getElementById("surpriseText").innerText=
+    messages[Math.floor(Math.random()*messages.length)];
+};
+
+// MUSIC FUNCTIONALITY
+let playing = false;
+const musicBtn = document.getElementById("musicBtn");
+const bgMusic = document.getElementById("bgMusic");
+
+// Attempt to autoplay
+window.addEventListener('load', function() {
+  bgMusic.volume = 0.5; // Set volume to 50%
+  bgMusic.play().catch(error => {
+    // Autoplay might be blocked, that's OK
+    console.log("Autoplay blocked - user interaction required");
+    playing = false;
+    musicBtn.style.opacity = "0.7";
+  });
+  playing = true;
+  musicBtn.style.opacity = "1";
+});
+
+function toggleMusic() {
+  if (playing) {
+    bgMusic.pause();
+    musicBtn.style.opacity = "0.7";
+    playing = false;
+  } else {
+    bgMusic.play().catch(error => {
+      console.log("Audio playback failed:", error);
+      alert("Music playback not available. Your browser may have blocked autoplay.");
+    });
+    musicBtn.style.opacity = "1";
+    playing = true;
+  }
+}
+
+// Click event
+musicBtn.addEventListener("click", toggleMusic, false);
+
+// Touch event for better mobile support
+musicBtn.addEventListener("touchstart", (e) => {
+  e.preventDefault();
+  toggleMusic();
+}, false);
+
+// Visual feedback on button press
+musicBtn.addEventListener("mousedown", function() {
+  this.style.transform = "scale(0.9)";
+});
+
+musicBtn.addEventListener("mouseup", function() {
+  this.style.transform = "scale(1)";
+});
+
+musicBtn.addEventListener("touchstart", function() {
+  this.style.transform = "scale(0.9)";
+});
+
+musicBtn.addEventListener("touchend", function() {
+  this.style.transform = "scale(1)";
+});
+
+// FLOATING HEARTS
+setInterval(()=>{
+  const h=document.createElement("div");
+  h.className="heart";
+  h.innerHTML="❤️";
+  h.style.left=Math.random()*100+"vw";
+  h.style.fontSize=Math.random()*20+10+"px";
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),8000);
+},500);
+</script>
+
+</body>
+</html>
